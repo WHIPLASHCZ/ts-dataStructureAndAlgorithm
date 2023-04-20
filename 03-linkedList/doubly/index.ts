@@ -1,0 +1,15 @@
+import DoublyLinkedList from "./doubly";
+const d = new DoublyLinkedList();
+d.append("aaa");
+d.append("bbb");
+d.append("ccc");
+d.append("ddd");
+d.append("eee");
+d.insert(3, "xxx");
+d.unShift("zzz");
+d.shift();
+d.pop();
+d.deleteByData("xxx");
+d.deleteByIndex(2);
+d.postTrave((node, idx) => console.log(node.data));
+console.log(d.size);
