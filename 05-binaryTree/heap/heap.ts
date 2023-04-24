@@ -16,11 +16,48 @@ class Heap<T> {
   private getLevelByNodeNum(arr = this.data) {
     let levelNum = 0,
       len = arr.length;
-    while (len >= 1) {
-      len /= 2;
+    while (len) {
+      len = Math.floor(len / 2);
       levelNum++;
     }
     return levelNum;
+  }
+  private getLastNotLeafNode(arr: T[]) {
+    /* levelNum层的满二叉树，有(2^levelNum)-1个节点;也就是最后一个叶子节点就是第(2^levelNum)-1个；
+       完全二叉树的最后一个叶子节点，就是倒数第二层的最后一个； 也就是第(2^(levelNum-1))-1个;
+       (2^levelNum)/2 == (2^(levelNum-1)); 
+       (2^levelNum)/2 -1 == (2^(levelNum-1))-1;
+       floor((2^levelNum)-1)/2) == (2^(levelNum-1))-1;
+
+       arr是一个完全二叉树； 
+       2^(levelNum-1)<=arr.length<=(2^levelNum)-1;
+       2^(levelNum-2)<=floor(arr.length/2)<=floor(((2^levelNum)-1)/2));
+       floor(arr.length/2) <= floor(((2^levelNum)-1)/2) == (2^(levelNum-1))-1
+     */
+
+    /**
+     * 例如一个完全二叉树有4层，那么该树的第四层 可能有一个节点或满节点；
+     *  若第四层只有一个节点，则该树共有8个节点，则是2^3;
+     *  若第四层有满节点，则该树共有15个节点，则是(2^4)-1;
+     *  可以得出，一个有N层的树，那么其节点数量在：2^(N-1) 到 (2^N)-1之间(左闭右闭)；
+     *  已知(2^N)需 除以2 N+1次(每次除后向下取整) 得到0；(除以N次后得到1 然后1/2向下取整得0)
+     *  所以 2^(N-1) 到 (2^N)-1 之间所有数 都只需除以2 N次(每次除后向下取整) 就能得0。
+     */
+
+    /**
+     * 所以 已知arr是一个N层的完全二叉树；其长度为len；
+     * arr可能有2^(N-1) 到 (2^N)-1 个节点，但这之间的数 都是除以2(每次除后向下取整) N次后为0；
+     * 也就是说，arr是一个N层的二叉树；
+     * 相当于 len每次做除以2(每次除后向下取整)的操作 就相当于把自己最后一层节点数量减去，得到其余节点数量；
+     * 所以，floor(len/2) 可以得到arr的非叶子节点个数。
+     * 因为len可能是2^(N-1) 到 (2^N)-1之间的任意正整数，但不管len是这之间的几，它做除以2(每次除后向下取整)的操作 次数都是一样的。
+     */
+
+    //最后一个叶子节点就是最后一个节点的父节点，子节点若为i(根节点从1开始)，则父节点下标为floor(i/2);
+    let notLeavesNum = Math.floor(arr.length / 2); //非叶子节点个数
+
+    let levelNum = this.getLevelByNodeNum(arr); //根据节点个数求出完全二叉树的层数
+    let notLeavesNumIdx = Math.pow(2, levelNum - 1) - 1 - 1; //根据层数求出非叶子节点个数
   }
   private swap(i: number, j: number, arr = this.data) {
     let temp = arr[i];
@@ -112,20 +149,6 @@ class Heap<T> {
      */
     let levelNum = this.getLevelByNodeNum(arr); //根据节点个数求出完全二叉树的层数
 
-    /* levelNum层的满二叉树，有(2^levelNum)-1个节点;也就是最后一个叶子节点就是第(2^levelNum)-1个；
-       完全二叉树的最后一个叶子节点，就是倒数第二层的最后一个； 也就是第(2^(levelNum-1))-1个;
-       (2^levelNum)/2 == (2^(levelNum-1)); 
-       (2^levelNum)/2 -1 == (2^(levelNum-1))-1;
-       floor((2^levelNum)-1)/2) == (2^(levelNum-1))-1;
-
-       arr是一个完全二叉树； 
-       2^(levelNum-1)<=arr.length<=(2^levelNum)-1;
-       2^(levelNum-2)<=floor(arr.length/2)<=floor(((2^levelNum)-1)/2));
-       floor(arr.length/2) <= floor(((2^levelNum)-1)/2) == (2^(levelNum-1))-1
-     */
-
-    //最后一个叶子节点就是最后一个节点的父节点，子节点若为i(根节点从1开始)，则父节点下标为floor(i/2);
-    let notLeavesNum = Math.floor(arr.length / 2); //非叶子节点个数
     let notLeavesNumIdx = Math.pow(2, levelNum - 1) - 1 - 1; //根据层数求出非叶子节点个数
     console.log(`levelNum - notleavesnum`, levelNum, notLeavesNumIdx + 1);
     let getIdxCmpFn = this.getCmpIdxFn(isMaxHeap, arr);

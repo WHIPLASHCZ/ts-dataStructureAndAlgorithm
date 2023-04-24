@@ -19,14 +19,16 @@ const h = new Heap<number>(false);
 // h.traveAsTree();
 
 const arr2 = [33, 22, 675, 12, 78, 34, 76];
-h.build_heap(arr2, false);
-console.log(arr2);
-h.traveAsTree(arr2);
+const arr3 = [9, 11, 20, 56, 23, 45, 88];
+h.build_heap(arr3, false);
+console.log(arr3);
+h.traveAsTree(arr3);
+console.log(getLevelByNodeNum(arr3.length), Math.floor((arr3.length - 1) / 2));
 
 function getLevelByNodeNum(len: number) {
   let levelNum = 0;
-  while (len >= 1) {
-    len /= 2;
+  while (len) {
+    len = Math.floor(len / 2);
     levelNum++;
   }
   return levelNum;
