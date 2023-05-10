@@ -135,6 +135,7 @@ class Heap<T> {
     return this.data[0];
   }
   build_heap(arr: T[], isMaxHeap = this.isMaxHeap) {
+    if (arr.length < 2) return new Heap(isMaxHeap, arr);
     // // 原地建堆
     // // 每个元素进行下滤操作。
     /*如果从头开始 依次下滤
@@ -151,8 +152,17 @@ class Heap<T> {
     // let notLeavesNumIdx = Math.pow(2, levelNum - 1) - 1 - 1; //根据层数求出非叶子节点个数
 
     //最后一个非叶子节点 也就是最后一个节点的父节点；
-    // 求节点i的父节点公式：floor( i/2 );
-    let lastNotLeaveNodeIdx = Math.floor((arr.length - 1) / 2);
+    // 求节点i的父节点公式：floor( i/2 ) (当根节点从1开始时);
+    // 求节点i的父节点公式：floor( (i-1)/2 ) (当根节点从0开始时，且i是下标);
+    /**
+     * 因为：
+     * 设有两个堆：
+     * [1,2,3,4,5]; //从1开始的堆；第i个节点求父节点公式：floor(i/2);
+     * [0,1,2,3,4]; //从0开始的堆；第i个节点求父节点公式：floor((i-1)/2);
+     * 因为从0开始的堆 每个i需要向前挪一位，每一项才能对应上从1开始的堆，对应上之后就可以用和前者一样的求父节点公式；
+     * 所以从0开始的堆 第i个节点求父节点 需要先让i向前挪一位也就是(i-1) 然后除以2；
+     */
+    let lastNotLeaveNodeIdx = Math.floor((arr.length - 1 - 1) / 2); //因为是是0开头的二叉搜索树 所以floor((下标-1)/2)
     let getIdxCmpFn = this.getCmpIdxFn(isMaxHeap, arr);
     let cmpFn = this.getCompareFn(isMaxHeap, arr);
 
