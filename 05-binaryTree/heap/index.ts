@@ -23,7 +23,10 @@ const arr3 = [9, 11, 20, 56, 23, 45, 88];
 h.build_heap(arr3, false);
 console.log(arr3);
 h.traveAsTree(arr3);
-console.log(getLevelByNodeNum(arr3.length), Math.floor((arr3.length - 1) / 2));
+// console.log(
+//   getLevelByNodeNum(arr3.length),
+//   Math.floor((arr3.length - 1 - 1) / 2)
+// );
 
 function getLevelByNodeNum(len: number) {
   let levelNum = 0;

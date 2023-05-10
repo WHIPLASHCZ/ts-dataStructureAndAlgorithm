@@ -167,6 +167,7 @@ class Heap<T> {
     let cmpFn = this.getCompareFn(isMaxHeap, arr);
 
     while (lastNotLeaveNodeIdx >= 0) {
+      console.log(`lastNotLeaveNodeIdx`, lastNotLeaveNodeIdx);
       let leftSonIdx = lastNotLeaveNodeIdx * 2 + 1,
         rightSonIdx = lastNotLeaveNodeIdx * 2 + 2;
       let betterSonIdx = getIdxCmpFn(leftSonIdx, rightSonIdx);
