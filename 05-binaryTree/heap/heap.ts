@@ -147,20 +147,22 @@ class Heap<T> {
      * 从倒数第一个非叶子节点到根节点为止(叶子节点无子节点不需要下滤) 开始依次下滤操作；
      * 也就相当于 把下面的值慢慢的往上换；
      */
-    let levelNum = this.getLevelByNodeNum(arr); //根据节点个数求出完全二叉树的层数
+    // let levelNum = this.getLevelByNodeNum(arr); //根据节点个数求出完全二叉树的层数
+    // let notLeavesNumIdx = Math.pow(2, levelNum - 1) - 1 - 1; //根据层数求出非叶子节点个数
 
-    let notLeavesNumIdx = Math.pow(2, levelNum - 1) - 1 - 1; //根据层数求出非叶子节点个数
-    console.log(`levelNum - notleavesnum`, levelNum, notLeavesNumIdx + 1);
+    //最后一个非叶子节点 也就是最后一个节点的父节点；
+    // 求节点i的父节点公式：floor( i/2 );
+    let lastNotLeaveNodeIdx = Math.floor((arr.length - 1) / 2);
     let getIdxCmpFn = this.getCmpIdxFn(isMaxHeap, arr);
     let cmpFn = this.getCompareFn(isMaxHeap, arr);
 
-    while (notLeavesNumIdx >= 0) {
-      let leftSonIdx = notLeavesNumIdx * 2 + 1,
-        rightSonIdx = notLeavesNumIdx * 2 + 2;
+    while (lastNotLeaveNodeIdx >= 0) {
+      let leftSonIdx = lastNotLeaveNodeIdx * 2 + 1,
+        rightSonIdx = lastNotLeaveNodeIdx * 2 + 2;
       let betterSonIdx = getIdxCmpFn(leftSonIdx, rightSonIdx);
-      if (cmpFn(betterSonIdx, notLeavesNumIdx))
-        this.swap(betterSonIdx, notLeavesNumIdx, arr);
-      notLeavesNumIdx--;
+      if (cmpFn(betterSonIdx, lastNotLeaveNodeIdx))
+        this.swap(betterSonIdx, lastNotLeaveNodeIdx, arr);
+      lastNotLeaveNodeIdx--;
     }
     return new Heap(isMaxHeap, arr);
   }
