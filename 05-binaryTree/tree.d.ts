@@ -6,3 +6,4 @@ declare interface treeNode<T> {
 }
 
 declare type traveCallback = (node: treeNode<T>) => void;
+declare type printAbleTreeNode<T> = treeNode<T> & PrintableNode;

@@ -4,7 +4,7 @@ class Heap<T> {
   public isMaxHeap: boolean = true;
   constructor(isMaxHeap: boolean = true, arr?: T[]) {
     this.isMaxHeap = isMaxHeap;
-    if (arr) this.data = arr;
+    if (arr) this.data = this.build_heap(arr, this.isMaxHeap);
   }
   get length(): number {
     return this.data.length;
@@ -68,11 +68,13 @@ class Heap<T> {
     // return this.data[i] > this.data[j] ? i : j;
     return isMaxHeap
       ? (subject: number, object: number) => {
-          if (arr.length < object) return subject;
+          if (arr.length <= object) return subject;
+          if (arr.length <= subject) return object;
           return arr[subject] > arr[object] ? subject : object;
         }
       : (subject: number, object: number) => {
-          if (arr.length < object) return subject;
+          if (arr.length <= object) return subject;
+          if (arr.length <= subject) return object;
           return arr[subject] < arr[object] ? subject : object;
         };
   }
@@ -92,17 +94,21 @@ class Heap<T> {
     }
   }
   // 下滤-删除时一般用下滤操作
-  private percolateDown(newDataIdx: number = 0) {
-    const cmpFn = this.getCompareFn();
-    const idxCmpFn = this.getCmpIdxFn();
+  private percolateDown(
+    newDataIdx: number = 0,
+    arr = this.data,
+    isMaxHeap = this.isMaxHeap
+  ) {
+    const cmpFn = this.getCompareFn(isMaxHeap, arr);
+    const idxCmpFn = this.getCmpIdxFn(isMaxHeap, arr);
     // 仍有左子节点的情况下继续遍历；
     // 因为堆是完全二叉树，若没有左子节点，必没有右子节点；
-    while (newDataIdx * 2 + 1 < this.data.length) {
+    while (newDataIdx * 2 + 1 < arr.length) {
       // 在当前子节点的左右节点中找出较大/较小节点索引
       let maxOrMinSonIdx = idxCmpFn(newDataIdx * 2 + 1, newDataIdx * 2 + 2);
       // 若较大/较小子节点大于自己 则与该子节点换位置;
       if (cmpFn(maxOrMinSonIdx, newDataIdx)) {
-        this.swap(newDataIdx, maxOrMinSonIdx);
+        this.swap(newDataIdx, maxOrMinSonIdx, arr);
         newDataIdx = maxOrMinSonIdx;
       } else break;
     }
@@ -135,7 +141,7 @@ class Heap<T> {
     return this.data[0];
   }
   build_heap(arr: T[], isMaxHeap = this.isMaxHeap) {
-    if (arr.length < 2) return new Heap(isMaxHeap, arr);
+    if (arr.length < 2) return arr;
     // // 原地建堆
     // // 每个元素进行下滤操作。
     /*如果从头开始 依次下滤
@@ -163,19 +169,11 @@ class Heap<T> {
      * 所以从0开始的堆 第i个节点求父节点 需要先让i向前挪一位也就是(i-1) 然后除以2；
      */
     let lastNotLeaveNodeIdx = Math.floor((arr.length - 1 - 1) / 2); //因为是是0开头的二叉搜索树 所以floor((下标-1)/2)
-    let getIdxCmpFn = this.getCmpIdxFn(isMaxHeap, arr);
-    let cmpFn = this.getCompareFn(isMaxHeap, arr);
-
     while (lastNotLeaveNodeIdx >= 0) {
-      console.log(`lastNotLeaveNodeIdx`, lastNotLeaveNodeIdx);
-      let leftSonIdx = lastNotLeaveNodeIdx * 2 + 1,
-        rightSonIdx = lastNotLeaveNodeIdx * 2 + 2;
-      let betterSonIdx = getIdxCmpFn(leftSonIdx, rightSonIdx);
-      if (cmpFn(betterSonIdx, lastNotLeaveNodeIdx))
-        this.swap(betterSonIdx, lastNotLeaveNodeIdx, arr);
+      this.percolateDown(lastNotLeaveNodeIdx, arr, isMaxHeap);
       lastNotLeaveNodeIdx--;
     }
-    return new Heap(isMaxHeap, arr);
+    return arr;
   }
   traveAsTree(arr = this.data) {
     // 完全二叉树的节点个数能除以2多少次，就有多少层。
@@ -187,7 +185,7 @@ class Heap<T> {
       let currentLevel = Math.pow(2, i) - 1,
         j = 0;
       while (j < currentLevelNodeNum && currentLevel + j < arr.length) {
-        str += arr[currentLevel + j++] + space;
+        str += arr[currentLevel + j++]!.valueOf() + space;
       }
       currentLevelNodeNum *= 2;
       console.log(str);

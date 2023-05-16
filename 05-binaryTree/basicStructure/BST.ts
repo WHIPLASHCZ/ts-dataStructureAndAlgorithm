@@ -1,5 +1,5 @@
 import { PrintableNode } from "hy-algokit";
-type printAbleTreeNode<T> = treeNode<T> & PrintableNode;
+
 class TreeNode<T> implements printAbleTreeNode<T> {
   public value: T;
   public left: TreeNode<T> | null = null;
@@ -279,3 +279,4 @@ class BinarySearchTree<T> {
 }
 
 export default BinarySearchTree;
+export { TreeNode };

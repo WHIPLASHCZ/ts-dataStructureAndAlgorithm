@@ -1,4 +1,4 @@
-import Heap from "./heap";
+import Heap from "./basicStructure/heap";
 const h = new Heap<number>(false);
 // const arr = [19, 100, 36, 17, 3, 25, 1, 2, 7];
 // arr.forEach((item) => h.insert(item));
@@ -19,10 +19,12 @@ const h = new Heap<number>(false);
 // h.traveAsTree();
 
 const arr2 = [33, 22, 675, 12, 78, 34, 76];
-const arr3 = [9, 11, 20, 56, 23, 45, 88];
-h.build_heap(arr3, false);
-console.log(arr3);
-h.traveAsTree(arr3);
+const arr3 = [9, 11, 20, 56, 23, 45];
+// console.log(arr3);
+h.traveAsTree(arr2);
+h.build_heap(arr2, false);
+
+h.traveAsTree(arr2);
 // console.log(
 //   getLevelByNodeNum(arr3.length),
 //   Math.floor((arr3.length - 1 - 1) / 2)

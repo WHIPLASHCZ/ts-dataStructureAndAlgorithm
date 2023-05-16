@@ -1,6 +1,6 @@
 // 基于数组实现
 class Queue<T> implements queue_interface<T> {
-  public data: T[] = [];
+  protected data: T[] = [];
   inQueue(info: T) {
     this.data.push(info);
   }
