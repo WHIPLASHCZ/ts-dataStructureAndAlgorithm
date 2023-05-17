@@ -1,2 +1,5 @@
 import AVLNode from "./AVLNode";
-class AVLTree<T> {}
+class AVLTree<T> {
+  rightRotate() {}
+  leftRotate() {}
+}
