@@ -1,4 +1,5 @@
 import { TreeNode } from "../../05-binaryTree/basicStructure/BST";
+import { btPrint } from "hy-algokit";
 class AVLNode<T> extends TreeNode<T> {
   public left: AVLNode<T> | null = null;
   public right: AVLNode<T> | null = null;
@@ -44,17 +45,43 @@ class AVLNode<T> extends TreeNode<T> {
     const pivot = this.left!;
     // 2.pivot的父指针指向this( root)当前节点的父节点；
     pivot.parent = this.parent;
+    // 挂载pivot
     if (this.parent && this.isLeft) this.parent.left = pivot;
     else if (this.parent && this.isRight) this.parent.right = pivot;
 
     // 处理pivot右节点的位置
     this.left = pivot.right;
+    if (pivot.right) pivot.right.parent = this;
 
     // 处理this(root)节点的位置
     pivot.right = this;
     this.parent = pivot;
-    return true;
+    return pivot;
+  }
+  leftRotate() {
+    if (this.getBalanceFactor() >= 1) return false;
+    // 处理pivot的位置
+    // 1.选择当前节点的左子节点作为旋转轴心(pivot)
+    const pivot = this.right!;
+    this.right = pivot.left;
+    if (pivot.left) pivot.left.parent = this.right;
+
+    pivot.parent = this.parent;
+    if (this.parent && this.isLeft) this.parent.left = pivot;
+    else if (this.parent && this.isRight) this.parent.right = pivot;
+    pivot.left = this;
+    this.parent = pivot;
+    return pivot;
   }
 }
-
+const a1 = new AVLNode(12);
+(a1.left = new AVLNode(11)), (a1.left.parent = a1);
+(a1.left.left = new AVLNode(10)), (a1.left.left.parent = a1.left);
+(a1.left.left.left = new AVLNode(9)), (a1.left.left.left.parent = a1.left.left);
+console.log(`a1!`);
+btPrint(a1);
+const p = a1.left.rightRotate()!;
+console.log(`after:\n`);
+btPrint(a1);
+// btPrint(p as AVLNode<number>);
 export default AVLNode;
