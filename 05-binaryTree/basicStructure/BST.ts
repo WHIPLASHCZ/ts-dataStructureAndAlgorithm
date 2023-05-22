@@ -30,19 +30,22 @@ class TreeNode<T> implements printAbleTreeNode<T> {
 // 3.左、右子树本身也都是二叉搜索树。
 // 左小右大；
 class BinarySearchTree<T> {
-  private root: TreeNode<T> | null = null;
+  protected root: TreeNode<T> | null = null;
   constructor(root: T | null = null) {
-    if (root) this.root = new TreeNode<T>(root);
+    if (root) this.root = this.getNode(root);
   }
   get _root() {
     return this.root;
   }
+  protected getNode(val: T) {
+    return new TreeNode<T>(val);
+  }
   insert(val: T) {
-    const newNode = new TreeNode<T>(val);
+    const newNode = this.getNode(val);
     if (!this.root) this.root = newNode;
     else this.insertNode(newNode, this.root);
   }
-  private insertNode(node: TreeNode<T>, mountPoint: TreeNode<T>) {
+  protected insertNode(node: TreeNode<T>, mountPoint: TreeNode<T>) {
     const v = node.value;
     if (!node || !mountPoint) return;
     if (v > mountPoint.value) {

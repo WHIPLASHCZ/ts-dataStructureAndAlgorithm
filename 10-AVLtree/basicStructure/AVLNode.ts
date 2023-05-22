@@ -38,6 +38,7 @@ class AVLNode<T> extends TreeNode<T> {
     if (rightHeight > leftHeight) return this.right;
     return this.isLeft ? this.left : this.right;
   }
+  // 右旋转：当左左情况时使用；
   rightRotate() {
     if (this.getBalanceFactor() <= 1) return false;
     // 处理pivot的位置
@@ -54,34 +55,33 @@ class AVLNode<T> extends TreeNode<T> {
     if (pivot.right) pivot.right.parent = this;
 
     // 处理this(root)节点的位置
+    //  自己变为pivot的右子树；这样，以当前节点为根的子树，高度就少了一层；
     pivot.right = this;
     this.parent = pivot;
     return pivot;
   }
+  // 左旋转：当右右情况时使用；
   leftRotate() {
     if (this.getBalanceFactor() >= 1) return false;
     // 处理pivot的位置
-    // 1.选择当前节点的左子节点作为旋转轴心(pivot)
+    // 1.选择当前节点的右子节点作为旋转轴心(pivot)
+    // 当前情况为：当前节点this的右子树不平衡，所以旋转锚点为this.right；
     const pivot = this.right!;
+
+    // 当前节点右指针指向pivot的左子树
     this.right = pivot.left;
     if (pivot.left) pivot.left.parent = this.right;
 
+    // pivot节点顶替到自己的位置；
     pivot.parent = this.parent;
     if (this.parent && this.isLeft) this.parent.left = pivot;
     else if (this.parent && this.isRight) this.parent.right = pivot;
+
+    // 自己变为pivot的左子树；这样，以当前节点为根的子树，高度就少了一层；
     pivot.left = this;
     this.parent = pivot;
     return pivot;
   }
 }
-const a1 = new AVLNode(12);
-(a1.left = new AVLNode(11)), (a1.left.parent = a1);
-(a1.left.left = new AVLNode(10)), (a1.left.left.parent = a1.left);
-(a1.left.left.left = new AVLNode(9)), (a1.left.left.left.parent = a1.left.left);
-console.log(`a1!`);
-btPrint(a1);
-const p = a1.left.rightRotate()!;
-console.log(`after:\n`);
-btPrint(a1);
-// btPrint(p as AVLNode<number>);
+
 export default AVLNode;
