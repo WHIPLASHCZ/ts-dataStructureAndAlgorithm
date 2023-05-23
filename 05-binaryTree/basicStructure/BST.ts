@@ -44,6 +44,7 @@ class BinarySearchTree<T> {
     const newNode = this.getNode(val);
     if (!this.root) this.root = newNode;
     else this.insertNode(newNode, this.root);
+    return newNode;
   }
   protected insertNode(node: TreeNode<T>, mountPoint: TreeNode<T>) {
     const v = node.value;
@@ -119,6 +120,7 @@ class BinarySearchTree<T> {
     if (!this.root) return null;
     const trave = this.search(val);
     if (!trave) return null;
+    const parent = trave.parent;
     if (!trave.left && !trave.right) {
       // 叶子节点
       this.replaceNode(trave, null);
@@ -167,6 +169,7 @@ class BinarySearchTree<T> {
       // 仅一个子节点
       this.replaceNode(trave, trave.left || trave.right);
     }
+    return parent;
   }
   mergeTree(tree1: TreeNode<T>, tree2: TreeNode<T>) {
     const newTree = new BinarySearchTree<T>();

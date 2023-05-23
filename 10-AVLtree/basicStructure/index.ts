@@ -10,37 +10,52 @@ class AVLTree<T> extends BinarySearchTree<T> {
     return new AVLNode<T>(val);
   }
   insert(val: T) {
-    super.insert(val);
-    this.reBalance();
+    const newNode = super.insert(val);
+    this.checkBalance(newNode as AVLNode<T>);
+    return newNode;
+  }
+  remove(val: T) {
+    const parent = super.remove(val) as AVLNode<T>;
+    if (parent) this.checkBalance(parent as AVLNode<T>);
+    return parent;
+  }
+  checkBalance(node: AVLNode<T>) {
+    let trave: AVLNode<T> | null = node.parent;
+    while (trave) {
+      if (!trave.isBalance) {
+        this.reBalance(trave);
+        break;
+      }
+      trave = trave.parent;
+    }
   }
   reBalance(grand: AVLNode<T> | null = this.root) {
-    if (!grand || grand.isBalance) return;
+    if (!grand) return;
     const pivot = grand.getHigherChild();
     if (!pivot) return;
     const current = pivot.getHigherChild();
     if (!current) return;
-
+    let newRoot = null;
     // 左右情况
     if (pivot.isLeft) {
       if (current.isRight) {
         pivot.leftRotate();
-        const newRoot = grand.rightRotate();
-        if (grand == this.root && newRoot) this.root = newRoot;
+        newRoot = grand.rightRotate();
       } else {
         //左左情况
-        grand.rightRotate();
+        newRoot = grand.rightRotate();
       }
       // 右左情况
     } else {
       if (current.isLeft) {
         pivot.rightRotate();
-        const newRoot = grand.leftRotate();
-        if (grand == this.root && newRoot) this.root = newRoot;
+        newRoot = grand.leftRotate();
       } else {
         // 右右情况
-        grand.leftRotate();
+        newRoot = grand.leftRotate();
       }
     }
+    if (newRoot && !newRoot.parent) this.root = newRoot;
   }
 }
 export default AVLTree;

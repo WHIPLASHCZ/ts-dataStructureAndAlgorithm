@@ -22,11 +22,13 @@ class AVLNode<T> extends TreeNode<T> {
     return Math.max(leftHeight, rightHeight) + 1;
   }
   getBalanceFactor() {
+    // console.log(`getBalanceFactor`);
     const leftHeight: number = this.left ? this.left.getHeight() : 0;
     const rightHeight: number = this.right ? this.right.getHeight() : 0;
     // 正数且大于1：左侧不平衡，需右旋
     // 负数且小于-1：右侧不平衡，需左旋
     // 0、1、-1：左右基本平衡
+    // console.log(`getBalanceFactor-done`, leftHeight - rightHeight);
     return leftHeight - rightHeight;
   }
   getHigherChild() {
@@ -40,44 +42,38 @@ class AVLNode<T> extends TreeNode<T> {
   }
   // 右旋转：当左左情况时使用；
   rightRotate() {
-    if (this.getBalanceFactor() <= 1) return false;
-    // 处理pivot的位置
-    // 1.选择当前节点的左子节点作为旋转轴心(pivot)
+    // 找到旋转锚点和当前不平衡节点的父节点；
     const pivot = this.left!;
-    // 2.pivot的父指针指向this( root)当前节点的父节点；
-    pivot.parent = this.parent;
-    // 挂载pivot
-    if (this.parent && this.isLeft) this.parent.left = pivot;
-    else if (this.parent && this.isRight) this.parent.right = pivot;
 
-    // 处理pivot右节点的位置
+    // 处理pivot右节点的位置；
     this.left = pivot.right;
     if (pivot.right) pivot.right.parent = this;
 
-    // 处理this(root)节点的位置
-    //  自己变为pivot的右子树；这样，以当前节点为根的子树，高度就少了一层；
+    // 处理pivot的位置；
+    if (this.parent && this.isLeft) this.parent.left = pivot;
+    else if (this.parent && this.isRight) this.parent.right = pivot;
+    pivot.parent = this.parent;
+
+    // 处理当前不平衡节点的位置
     pivot.right = this;
     this.parent = pivot;
     return pivot;
   }
   // 左旋转：当右右情况时使用；
   leftRotate() {
-    if (this.getBalanceFactor() >= 1) return false;
-    // 处理pivot的位置
-    // 1.选择当前节点的右子节点作为旋转轴心(pivot)
-    // 当前情况为：当前节点this的右子树不平衡，所以旋转锚点为this.right；
+    // 找到旋转锚点和当前不平衡节点的父节点；
     const pivot = this.right!;
 
-    // 当前节点右指针指向pivot的左子树
+    // 处理pivot右节点的位置；
     this.right = pivot.left;
-    if (pivot.left) pivot.left.parent = this.right;
+    if (pivot.left) pivot.left.parent = this;
 
-    // pivot节点顶替到自己的位置；
-    pivot.parent = this.parent;
+    // 处理pivot的位置；
     if (this.parent && this.isLeft) this.parent.left = pivot;
     else if (this.parent && this.isRight) this.parent.right = pivot;
+    pivot.parent = this.parent;
 
-    // 自己变为pivot的左子树；这样，以当前节点为根的子树，高度就少了一层；
+    // 处理当前不平衡节点的位置
     pivot.left = this;
     this.parent = pivot;
     return pivot;
