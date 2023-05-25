@@ -120,7 +120,6 @@ class BinarySearchTree<T> {
     if (!this.root) return null;
     const trave = this.search(val);
     if (!trave) return null;
-    const parent = trave.parent;
     if (!trave.left && !trave.right) {
       // 叶子节点
       this.replaceNode(trave, null);
@@ -136,40 +135,41 @@ class BinarySearchTree<T> {
       // 方法2：找左子树中最大的节点(前驱) 或 右子树中最小的节点(后继)，然后顶替被删除的节点(这样仍然可保持BST左小右大的规律)
       /**方法2 */
       const maxNodeInLeftSonTree = this.maxNode(trave.left)!; //找到前驱节点；
-      let isMaxNodeInLeftSonTreeLeft: 'left' | 'right' = maxNodeInLeftSonTree.isLeft ? 'left' : 'right';
       // 如果前驱/后继节点 有子节点的话 把该子节点替换到前驱/后继节点原来的位置；
       /**
        * 因为BST的特性，所以前驱/后继节点只会有一个子节点。因为前驱/后继节点是左子树最大的/右子树最小的；
        * 所以，前驱节点只可能有左子节点(小于前驱)，后继节点只可能有右子节点(大于后继)。
        */
+      const maxNodeInLeftTreePos = maxNodeInLeftSonTree.isLeft
+        ? "left"
+        : "right";
       if (maxNodeInLeftSonTree.left) {
         // 前驱节点可能有左子节点；若有的话，将其顶替到自己原来的位置，自己顶替到被删除节点的位置。
-        maxNodeInLeftSonTree.parent![isMaxNodeInLeftSonTreeLeft] = maxNodeInLeftSonTree.left;
+        maxNodeInLeftSonTree.parent![maxNodeInLeftTreePos] =
+          maxNodeInLeftSonTree.left;
         maxNodeInLeftSonTree.left.parent = maxNodeInLeftSonTree.parent;
       } else {
-        // 否则，删除掉自己的父节点对自己的引用；否则自己顶替到被删除节点的位置后会有环形引用
-        // 前提是，前驱/后继节点的父节点不是被删除节点；
-        if (maxNodeInLeftSonTree.parent != trave) {
-          maxNodeInLeftSonTree.parent!.right = null; //若前驱节点不是被删除节点的直接子节点，那必然是右节点；
-        }
+        // 若前驱节点不是被删除节点的左子节点 且前驱节点没有子节点
+        // 直接删除前驱节点与其父节点的连接
+        maxNodeInLeftSonTree.parent![maxNodeInLeftTreePos] = null;
       }
 
       // 当前驱/后继节点顶替到被删除节点的位置后，前驱/后继节点需要继承被删除节点的左右子树；
       // 同时，以防万一被删除节点的左/右子树就是前驱/后继节点自身 导致环形引用，所以需要判断再赋值；
       if (maxNodeInLeftSonTree != trave.left) {
         maxNodeInLeftSonTree.left = trave.left;
-        trave.left.parent = maxNodeInLeftSonTree;
+        if (trave.left) trave.left.parent = maxNodeInLeftSonTree;
       }
       maxNodeInLeftSonTree.right = trave.right;
       trave.right.parent = maxNodeInLeftSonTree;
-
       // 让前驱/后继节点 顶替到被删除节点trave的位置；
       this.replaceNode(trave, maxNodeInLeftSonTree);
     } else if (trave.left || trave.right) {
       // 仅一个子节点
       this.replaceNode(trave, trave.left || trave.right);
     }
-    return parent;
+
+    return trave;
   }
   mergeTree(tree1: TreeNode<T>, tree2: TreeNode<T>) {
     const newTree = new BinarySearchTree<T>();

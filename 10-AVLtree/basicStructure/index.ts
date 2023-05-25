@@ -15,9 +15,9 @@ class AVLTree<T> extends BinarySearchTree<T> {
     return newNode;
   }
   remove(val: T) {
-    const parent = super.remove(val) as AVLNode<T>;
-    if (parent) this.checkBalance(parent as AVLNode<T>);
-    return parent;
+    const deletedNode = super.remove(val) as AVLNode<T>;
+    if (deletedNode) this.checkBalance(deletedNode as AVLNode<T>);
+    return deletedNode;
   }
   checkBalance(node: AVLNode<T>) {
     let trave: AVLNode<T> | null = node.parent;
