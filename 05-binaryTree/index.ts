@@ -9,12 +9,15 @@ for (let n of mock) {
 // b.preTrave((node) => {
 //   console.log(`node:`, node.value);
 // });
-btPrint(b._root);
 
+// btPrint(b._root);
+// console.log('\n');
 b.remove(9);
-btPrint(b._root);
+// btPrint(b._root);
+// console.log('\n');
 b.remove(7);
-btPrint(b._root);
+// btPrint(b._root);
+// console.log('\n');
 b.remove(11);
 // b.insert(20);
 // b.insert(30);
@@ -22,5 +25,10 @@ b.remove(11);
 // b.insert(15);
 // b.insert(19);
 // b.insert(36);
-// b.insert(32);
+b.insert(5.5);
+b.insert(2);
 btPrint(b._root);
+console.log('\n');
+b.remove(5);
+btPrint(b._root);
+console.log('\n');
