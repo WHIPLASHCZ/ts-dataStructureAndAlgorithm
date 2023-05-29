@@ -16,18 +16,28 @@ class AVLTree<T> extends BinarySearchTree<T> {
   }
   remove(val: T) {
     const deletedNode = super.remove(val) as AVLNode<T>;
-    if (deletedNode) this.checkBalance(deletedNode as AVLNode<T>);
+    this.checkBalance(
+      deletedNode.parent
+        ? (deletedNode as AVLNode<T>)
+        : this.root!.left || this.root!.right,
+      false
+    );
     return deletedNode;
   }
-  checkBalance(node: AVLNode<T>) {
+  checkBalance(node: AVLNode<T> | null, isInsert: boolean = true) {
+    if (!node) return;
     let trave: AVLNode<T> | null = node.parent;
     while (trave) {
       if (!trave.isBalance) {
         this.reBalance(trave);
-        break;
+        //
+        if (isInsert) break;
       }
       trave = trave.parent;
     }
+    // 因为AVL树每次插入、删除时都会检查平衡，一旦左右子树高度差超过2时就会进行旋转操作；
+    // 所以，AVL树即便不平衡，那左右子树的高度差也不可能超过2；
+    // 所以，只需要进行一次旋转操作AVL树即可回到平衡状态；
   }
   reBalance(grand: AVLNode<T> | null = this.root) {
     if (!grand) return;

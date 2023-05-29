@@ -168,7 +168,6 @@ class BinarySearchTree<T> {
       // 仅一个子节点
       this.replaceNode(trave, trave.left || trave.right);
     }
-
     return trave;
   }
   mergeTree(tree1: TreeNode<T>, tree2: TreeNode<T>) {
