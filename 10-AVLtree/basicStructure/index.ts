@@ -14,16 +14,16 @@ class AVLTree<T> extends BinarySearchTree<T> {
     this.checkBalance(newNode as AVLNode<T>);
     return newNode;
   }
-  remove(val: T) {
-    const deletedNode = super.remove(val) as AVLNode<T>;
-    this.checkBalance(
-      deletedNode.parent
-        ? (deletedNode as AVLNode<T>)
-        : this.root!.left || this.root!.right,
-      false
-    );
-    return deletedNode;
-  }
+  // remove(val: T) {
+  //   const deletedNode = super.remove(val) as AVLNode<T>;
+  //   this.checkBalance(
+  //     deletedNode.parent
+  //       ? (deletedNode as AVLNode<T>)
+  //       : this.root!.left || this.root!.right,
+  //     false
+  //   );
+  //   return deletedNode;
+  // }
   checkBalance(node: AVLNode<T> | null, isInsert: boolean = true) {
     if (!node) return;
     let trave: AVLNode<T> | null = node.parent;

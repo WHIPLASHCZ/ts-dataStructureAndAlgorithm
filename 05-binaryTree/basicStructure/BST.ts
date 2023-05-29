@@ -40,6 +40,7 @@ class BinarySearchTree<T> {
   protected getNode(val: T) {
     return new TreeNode<T>(val);
   }
+  protected checkBalance(node: TreeNode<T> | null, isInsert: boolean = true) {}
   insert(val: T) {
     const newNode = this.getNode(val);
     if (!this.root) this.root = newNode;
@@ -164,10 +165,15 @@ class BinarySearchTree<T> {
       trave.right.parent = maxNodeInLeftSonTree;
       // 让前驱/后继节点 顶替到被删除节点trave的位置；
       this.replaceNode(trave, maxNodeInLeftSonTree);
+
+      this.checkBalance(
+        maxNodeInLeftSonTree.left || maxNodeInLeftSonTree.right
+      );
     } else if (trave.left || trave.right) {
       // 仅一个子节点
       this.replaceNode(trave, trave.left || trave.right);
     }
+    this.checkBalance(trave);
     return trave;
   }
   mergeTree(tree1: TreeNode<T>, tree2: TreeNode<T>) {
