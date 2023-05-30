@@ -40,7 +40,7 @@ class BinarySearchTree<T> {
   protected getNode(val: T) {
     return new TreeNode<T>(val);
   }
-  protected checkBalance(node: TreeNode<T> | null, isInsert: boolean = true) {}
+  protected checkBalance(node: TreeNode<T> | null , isInsert:boolean=true) {}
   insert(val: T) {
     const newNode = this.getNode(val);
     if (!this.root) this.root = newNode;
@@ -112,11 +112,10 @@ class BinarySearchTree<T> {
     else if (current.isRight) current.parent!.right = replacement;
   }
   remove(val: T) {
-    /**四种情况：
-     * 1、要删除的节点是否存在
-     * 2、若删除的节点没有子节点；
-     * 3、若删除的节点只有一个节点；
-     * 4、若删除的节点有两个节点；
+    /**三种情况：
+     * 1、若删除的节点没有子节点；
+     * 2、若删除的节点只有一个节点；
+     * 3、若删除的节点有两个节点；
      */
     if (!this.root) return null;
     const trave = this.search(val);
@@ -136,6 +135,7 @@ class BinarySearchTree<T> {
       // 方法2：找左子树中最大的节点(前驱) 或 右子树中最小的节点(后继)，然后顶替被删除的节点(这样仍然可保持BST左小右大的规律)
       /**方法2 */
       const maxNodeInLeftSonTree = this.maxNode(trave.left)!; //找到前驱节点；
+      const originMaxNodeInLeftTreeParent = maxNodeInLeftSonTree.parent==trave? maxNodeInLeftSonTree : maxNodeInLeftSonTree.parent;
       // 如果前驱/后继节点 有子节点的话 把该子节点替换到前驱/后继节点原来的位置；
       /**
        * 因为BST的特性，所以前驱/后继节点只会有一个子节点。因为前驱/后继节点是左子树最大的/右子树最小的；
@@ -165,15 +165,13 @@ class BinarySearchTree<T> {
       trave.right.parent = maxNodeInLeftSonTree;
       // 让前驱/后继节点 顶替到被删除节点trave的位置；
       this.replaceNode(trave, maxNodeInLeftSonTree);
-
-      this.checkBalance(
-        maxNodeInLeftSonTree.left || maxNodeInLeftSonTree.right
-      );
+      this.checkBalance( originMaxNodeInLeftTreeParent||this.root , false );
+      return trave;
     } else if (trave.left || trave.right) {
       // 仅一个子节点
       this.replaceNode(trave, trave.left || trave.right);
     }
-    this.checkBalance(trave);
+    this.checkBalance(trave.parent, false );
     return trave;
   }
   mergeTree(tree1: TreeNode<T>, tree2: TreeNode<T>) {
@@ -257,29 +255,9 @@ class BinarySearchTree<T> {
   }
   // 层序遍历
   // 逐层遍历
-  // levelTrave(cb: traveCallback) {
-  //   if (!this.root) return null;
-  //   const queue = [this.root]; //队列
-  //   for (let node of queue) {
-  //     if (node.left) queue.push(node.left);
-  //     if (node.right) queue.push(node.right);
-  //   }
-  //   for (let node of queue) {
-  //     cb(node);
-  //   }
-  // }
   levelTrave(cb: traveCallback) {
     if (!this.root) return null;
     const queue = [this.root]; //队列
-    // for (let i = 0; i < queue.length; i++) {
-    //   const node = queue[i];
-    //   if (node.left) queue.push(node.left);
-    //   if (node.right) queue.push(node.right);
-    //   if (queue.length) {
-    //     cb(queue.shift()!);
-    //     i--;
-    //   }
-    // }
     while (queue.length) {
       const node = queue.shift()!;
       cb(node);
