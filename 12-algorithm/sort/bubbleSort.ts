@@ -30,5 +30,5 @@ function bubbleSort(arr: number[], ascending = true) {
 }
 
 sortTest(bubbleSort);
-
+measureSort(bubbleSort, 10000);
 export {};
