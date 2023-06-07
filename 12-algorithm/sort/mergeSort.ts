@@ -39,6 +39,14 @@ function mergeArr(arr1: number[], arr2: number[], ascending = true) {
   else if (j < arr2.length) for (; j < arr2.length; j++) ret.push(arr2[j]);
   return ret;
 }
+
 sortTest(mergeSort);
 measureSort(mergeSort, 10000);
+// 2：在不创建新数组的情况下，原地进行归并排序；
+function mergeSort2(
+  arr: number[],
+  ascending: boolean = true,
+  start: number,
+  end: number
+) {}
 export {};
