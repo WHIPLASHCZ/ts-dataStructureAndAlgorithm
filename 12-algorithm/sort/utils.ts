@@ -26,9 +26,12 @@ export function sortTest(
   const testArr = Array.from({ length: len }, () =>
     Math.round(Math.random() * 200)
   );
+
   console.log(`原数组：`, testArr);
   const sorted = sortFn(testArr, ascending);
+  const ret = isSorted(sorted, ascending);
   console.log(`\n`);
   console.log(`排序后数组：`, sorted);
-  console.log(`排序后是否有序：`, isSorted(sorted, ascending));
+  console.log(`排序后是否有序：`, ret);
+  return ret;
 }
