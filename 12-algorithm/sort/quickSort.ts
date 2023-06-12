@@ -8,52 +8,53 @@ function quickSort(
   left = 0,
   right = arr.length - 2
 ) {
-  if (pivotIdx - left + 1 < 2) return arr;
+  if (pivotIdx - left < 1) return arr;
   /**
    * 快排：
-   * 左侧找比pivot大的，右侧找比pivot小的 然后交换位置；
+   * pivot为当前序列最后一个数字；
+   * 在pivot前面的序列中，用双指针 左侧找比pivot大的，右侧找比pivot小的 然后交换位置；
+   * 最后再把pivot交换到中间，以至于pivot左侧都小于等于pivot，其右侧都大于pivot；
    * 然后递归继续上述操作
    */
-  //   const cmp = makeCmpFn(ascending);
-  const originLeft = left;
-  while (left <= right) {
-    if (arr[left] > arr[pivotIdx] && arr[right] <= arr[pivotIdx]) {
-      swap(arr, left, right);
-      left++, right--;
+  const cmpCanEqual = makeCmpFn(ascending, true);
+  const cmpCanNotEqual = makeCmpFn(ascending, false);
+  // const originLeft = left;
+  let leftTraver = left,
+    rightTraver = right;
+  while (leftTraver <= rightTraver) {
+    // arr[left] > arr[pivotIdx] && arr[right] <= arr[pivotIdx]
+    if (
+      cmpCanNotEqual(arr[pivotIdx], arr[leftTraver]) &&
+      cmpCanEqual(arr[rightTraver], arr[pivotIdx])
+    ) {
+      swap(arr, leftTraver, rightTraver);
+      leftTraver++, rightTraver--;
     } else {
-      if (arr[left] <= arr[pivotIdx]) left++;
-      if (arr[right] > arr[pivotIdx]) right--;
+      // 若不符合交换规则，则继续找；
+      if (cmpCanEqual(arr[leftTraver], arr[pivotIdx])) leftTraver++;
+      if (cmpCanNotEqual(arr[pivotIdx], arr[rightTraver])) rightTraver--;
     }
   }
-  let pivotIdxAfterSwap = pivotIdx;
-  if (arr[left] > arr[pivotIdx])
-    swap(arr, pivotIdx, left), (pivotIdxAfterSwap = left);
-  else if (arr[right] > arr[pivotIdx])
-    swap(arr, pivotIdx, right), (pivotIdxAfterSwap = right);
-  const beforePivotNum = pivotIdxAfterSwap - originLeft;
-  const afterPivotNum = pivotIdx - pivotIdxAfterSwap;
-  quickSort(
-    arr,
-    ascending,
-    pivotIdxAfterSwap - 1,
-    pivotIdxAfterSwap - beforePivotNum,
-    pivotIdxAfterSwap - 2
-  );
-  quickSort(
-    arr,
-    ascending,
-    pivotIdxAfterSwap + afterPivotNum,
-    pivotIdxAfterSwap + 1,
-    pivotIdxAfterSwap + afterPivotNum - 1
-  );
+
+  // pivot前面的所有元素交换完毕后，pivot和left进行换位
+  /**
+   * 双指针走完后，arr[leftTraver]要么大于arr[pivotIdx]，要么leftTraver==pivotIdx;
+   * 在最后一次遍历时：
+   * 情况1：leftTraver找到了大于arr[pivotIdx]的元素，但rightTraver没找到小于arr[pivotIdx]的元素：
+   *        则，leftTraver停在原地不动；所以遍历完毕后，leftTraver大于arr[pivotIdx]。
+   *
+   * 情况2：leftTraver找到了大于arr[pivotIdx]的元素，rightTraver也找到比arr[pivotIdx]小的元素：
+   *        则它俩交换元素，然后leftTraver后走一步，rightTraver前走一步；
+   *        此时leftTraver位置又是交换前那个大于arr[pivotIdx]的那个数字。
+   */
+  swap(arr, pivotIdx, leftTraver);
+  // 递归pivot的前面的序列
+  quickSort(arr, ascending, leftTraver - 1, left, leftTraver - 2);
+
+  // 递归pivot的后面的序列
+  quickSort(arr, ascending, pivotIdx, leftTraver + 1, right);
   return arr;
 }
-// const arr = [20, 2, 9, 7, 12, 15, 1, 6, 8];
-// quickSort(arr);
-// console.log(`arr:`, arr);
 
-for (let i = 0; i <= 10; i++) {
-  const res = sortTest(quickSort, true, 100);
-  if (!res) throw new Error("排序有误");
-}
-measureSort(quickSort, 100000);
+sortTest(quickSort, true, 10);
+measureSort(quickSort, 10000);

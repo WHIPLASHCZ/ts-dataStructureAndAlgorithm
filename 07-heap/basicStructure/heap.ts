@@ -175,6 +175,9 @@ class Heap<T> {
     }
     return arr;
   }
+  static buildHeap<T>(arr: T[], isMaxHeap: boolean) {
+    return this.prototype.build_heap(arr, isMaxHeap);
+  }
   traveAsTree(arr = this.data) {
     // 完全二叉树的节点个数能除以2多少次，就有多少层。
     let levelNum = this.getLevelByNodeNum(arr);

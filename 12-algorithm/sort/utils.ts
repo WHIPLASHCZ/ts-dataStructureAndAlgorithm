@@ -13,9 +13,13 @@ function isSorted(arr: number[], ascending: boolean) {
   return true;
 }
 
-export const makeCmpFn = (ascending: boolean) =>
+export const makeCmpFn = (ascending: boolean, canEqual = false) =>
   ascending
-    ? (n1: number, n2: number) => n1 < n2
+    ? canEqual
+      ? (n1: number, n2: number) => n1 <= n2
+      : (n1: number, n2: number) => n1 < n2
+    : canEqual
+    ? (n1: number, n2: number) => n1 >= n2
     : (n1: number, n2: number) => n1 > n2;
 
 export function sortTest(
