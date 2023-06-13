@@ -2,30 +2,25 @@ import Heap from "../../07-heap/basicStructure/heap";
 import { swap, sortTest, makeCmpFn } from "./utils";
 import { measureSort } from "hy-algokit";
 
-function heapSort2(arr: number[], ascending = true) {
-  const heap = new Heap(!ascending, arr),
-    ret = new Array(arr.length).fill(0);
-  let i = 0;
-  while (!heap.isEmpty) ret[i++] = heap.extract();
-  return ret;
-}
+// function heapSort2(arr: number[], ascending = true) {
+//   const heap = new Heap(!ascending, arr),
+//     ret = new Array(arr.length).fill(0);
+//   let i = 0;
+//   while (!heap.isEmpty) ret[i++] = heap.extract();
+//   return ret;
+// }
 
 function heapSort(arr: number[], ascending = true) {
   // 原地建堆
   let heapSize = arr.length - 1;
-  const cmp = !ascending
-    ? (arr: number[], subject: number, object: number) => {
-        if (arr.length <= object) return subject;
-        if (arr.length <= subject) return object;
-        return arr[subject] > arr[object] ? subject : object;
-      }
-    : (arr: number[], subject: number, object: number) => {
-        if (arr.length <= object) return subject;
-        if (arr.length <= subject) return object;
-        return arr[subject] < arr[object] ? subject : object;
-      };
+  const cmp = ascending
+    ? (arr: number[], subject: number, object: number) =>
+        arr[subject] > arr[object] ? subject : object
+    : (arr: number[], subject: number, object: number) =>
+        arr[subject] < arr[object] ? subject : object;
   buildHeap(arr, heapSize, cmp);
-  while (heapSize > 1) {
+
+  while (heapSize >= 1) {
     swap(arr, 0, heapSize);
     percolateDown(arr, 0, --heapSize, cmp);
   }
@@ -65,5 +60,5 @@ function percolateDown(
   }
 }
 
-// sortTest(heapSort, true, 11);
+// sortTest(heapSort, false, 21);
 measureSort(heapSort, 1000000);

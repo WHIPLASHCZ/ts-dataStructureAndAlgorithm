@@ -56,5 +56,5 @@ function quickSort(
   return arr;
 }
 
-sortTest(quickSort, true, 10);
-measureSort(quickSort, 10000);
+// sortTest(quickSort, true, 10);
+measureSort(quickSort, 1000000);

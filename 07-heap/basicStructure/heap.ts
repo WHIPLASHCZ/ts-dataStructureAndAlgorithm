@@ -86,7 +86,7 @@ class Heap<T> {
   // 上滤-插入时一般用上滤操作
   private percolateUp(newDataIdx: number = this.length - 1) {
     const cmpFn = this.getCompareFn();
-    let fatherIdx = Math.floor((newDataIdx - 1) / 2);
+    let fatherIdx = Math.floor((newDataIdx - 1) / 2); //也可以是Math.floor(newDataIdx / 2) - 1;
     while (newDataIdx > 0 && cmpFn(newDataIdx, fatherIdx)) {
       this.swap(newDataIdx, fatherIdx);
       newDataIdx = fatherIdx;
@@ -169,6 +169,8 @@ class Heap<T> {
      * 所以从0开始的堆 第i个节点求父节点 需要先让i向前挪一位也就是(i-1) 然后除以2；
      */
     let lastNotLeaveNodeIdx = Math.floor((arr.length - 1 - 1) / 2); //因为是是0开头的二叉搜索树 所以floor((下标-1)/2)
+    // 或者：lastNotLeaveNodeIdx = Math.floor((arr.length) / 2) - 1;
+    // 总之因为数组为底层的堆 索引是从0开始，所以需要减一，往前找一位。
     while (lastNotLeaveNodeIdx >= 0) {
       this.percolateDown(lastNotLeaveNodeIdx, arr, isMaxHeap);
       lastNotLeaveNodeIdx--;
