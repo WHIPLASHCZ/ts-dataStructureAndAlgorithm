@@ -1,6 +1,6 @@
 import { swap, sortTest, makeCmpFn } from "./utils";
 // 选择排序：相对于冒泡排序，减少了交换的次数。
-function selectionSort(arr: number[], ascending = true) {
+export function selectionSort(arr: number[], ascending = true) {
   const cmp = makeCmpFn(ascending);
   for (let i = 0; i < arr.length - 1; i++) {
     let maxOrMinIdx = i;

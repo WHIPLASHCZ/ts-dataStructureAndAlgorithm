@@ -1,6 +1,6 @@
 import { swap, sortTest, makeCmpFn } from "./utils";
 import { measureSort } from "hy-algokit";
-function mergeSort(arr: number[], ascending = true): number[] {
+export function mergeSort(arr: number[], ascending = true): number[] {
   //   步骤一:分解(Divide):
   /**
    * 1、如果待排序数组长度为1，认为这个数组已经有序，直接返回;

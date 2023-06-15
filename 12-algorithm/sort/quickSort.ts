@@ -1,7 +1,7 @@
 import { swap, sortTest, makeCmpFn } from "./utils";
 import { measureSort } from "hy-algokit";
 
-function quickSort(
+export function quickSort(
   arr: number[],
   ascending = true,
   pivotIdx = arr.length - 1,

@@ -12,7 +12,7 @@ import { measureSort } from "hy-algokit";
 //   return arr;
 // }
 
-function bubbleSort(arr: number[], ascending = true) {
+export function bubbleSort(arr: number[], ascending = true) {
   const cmp = makeCmpFn(ascending);
   for (let i = 0; i < arr.length; i++) {
     let isSwaped = false;

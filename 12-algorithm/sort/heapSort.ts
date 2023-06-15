@@ -10,7 +10,7 @@ import { measureSort } from "hy-algokit";
 //   return ret;
 // }
 
-function heapSort(arr: number[], ascending = true) {
+export function heapSort(arr: number[], ascending = true) {
   // 原地建堆
   let heapSize = arr.length - 1;
   const cmp = ascending

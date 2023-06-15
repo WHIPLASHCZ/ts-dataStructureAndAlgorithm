@@ -8,7 +8,7 @@ import { measureSort } from "hy-algokit";
 5、以此类推，直到整个数组都有序。
 6、循环步骤2~5，直到最后一个元素。
  */
-function insertionSort(arr: number[], ascending = true) {
+export function insertionSort(arr: number[], ascending = true) {
   const cmp = makeCmpFn(ascending);
   for (let i = 1; i < arr.length; i++) {
     // arr[i]到arr[len-1]为未排序部分；
