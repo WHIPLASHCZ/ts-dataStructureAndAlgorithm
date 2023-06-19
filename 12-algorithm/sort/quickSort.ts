@@ -56,5 +56,39 @@ export function quickSort(
   return arr;
 }
 
-// sortTest(quickSort, true, 10);
+// 快速排序优化：随机取pivot；
+function quickSort2(
+  arr: number[],
+  ascending = true,
+  left = 0,
+  pivot = arr.length - 1
+) {
+  // 快速排序
+  if (pivot - left < 1) return arr;
+  let leftTraver = left,
+    rightTraver = pivot - 1;
+  let randomPivot = Math.floor(Math.random() * (pivot - left) + left);
+  swap(arr, pivot, randomPivot);
+  // 左侧找大于pivot的值
+  // 右侧找小于pivot的值
+  // 交换位置
+  // pivot放中间
+  while (leftTraver <= rightTraver) {
+    if (arr[leftTraver] > arr[pivot] && arr[rightTraver] <= arr[pivot]) {
+      swap(arr, leftTraver, rightTraver);
+      leftTraver++, rightTraver--;
+    } else {
+      if (arr[leftTraver] <= arr[pivot]) leftTraver++;
+      if (arr[rightTraver] > arr[pivot]) rightTraver--;
+    }
+  }
+  swap(arr, leftTraver, pivot);
+  quickSort2(arr, ascending, left, leftTraver - 1);
+  quickSort2(arr, ascending, leftTraver + 1, pivot);
+
+  return arr;
+}
+
+sortTest(quickSort2, true, 100);
 measureSort(quickSort, 1000000);
+measureSort(quickSort2, 1000000);
