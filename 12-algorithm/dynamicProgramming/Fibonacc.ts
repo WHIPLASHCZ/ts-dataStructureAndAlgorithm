@@ -36,5 +36,13 @@ function fib3(n: number) {
   }
   return third;
 }
+
+// 动态规划
+function fib4(n: number) {
+  let dp = [0, 1];
+  for (let i = 2; i <= n; i++) dp[i] = dp[i - 1] + dp[i - 2];
+  return dp[n];
+}
+
 let a = fib2(24);
 console.log(a);
