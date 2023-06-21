@@ -21,15 +21,23 @@ function fib2(n: number): number {
   return fib(n);
 }
 
-// 滚动迭代法
-// 只需要维护F(n)、F(n-1)、F(n-2)即可
+// 动态规划
 function fib3(n: number) {
+  let dp = [0, 1];
+  for (let i = 2; i <= n; i++) dp[i] = dp[i - 1] + dp[i - 2];
+  return dp[n];
+}
+
+
+// 动态规划-状态压缩
+// 只需要维护F(n)、F(n-1)、F(n-2)即可
+function fib4(n: number) {
   if (n <= 1) return n;
   let first = 1,
     second = 1,
     third = 1;
   while (n > 2) {
-    third = (first + second) % 1000000007;
+    third = first + second;
     first = second;
     second = third;
     n--;
@@ -37,12 +45,20 @@ function fib3(n: number) {
   return third;
 }
 
-// 动态规划
-function fib4(n: number) {
-  let dp = [0, 1];
-  for (let i = 2; i <= n; i++) dp[i] = dp[i - 1] + dp[i - 2];
-  return dp[n];
-}
+// 动态规划-状态压缩
+// 只需要维护F(n)、F(n-1)、F(n-2)即可
+function fib5(n: number) {
+  if (n <= 1) return n;
+  let first = 0,
+    second = 1,tempFirst = 0;
 
-let a = fib2(24);
-console.log(a);
+  for(let i=2;i<=n;i++) {
+    tempFirst = first;
+    first = second;
+
+    // 当i==n时，second为 fib(n-1)+fib(n-2)之和。
+    second = second+tempFirst;
+  }
+  return second;
+}
+console.log(fib5(10));
