@@ -8,7 +8,7 @@
 // 如果它加上上一个以i-1为结尾索引的最大子数组的和反而变小的话，那么就nums[i]独自作为一个子数组的最大和。
 
 // 动态规划
-function maxSubArray(nums: number[]) {
+function maxSubArray1(nums: number[]) {
   // dp[i]：以索引i为结尾元素的有最大和的子数组的和；
   let dp = [nums[0]],
     max = nums[0];
