@@ -1,5 +1,6 @@
+// 力扣：股票买卖的最佳时机
 // 普通动态规划
-function maxProfit(prices: number[]) {
+function maxProfit1(prices: number[]) {
   // dp[i]：第i天能获取到的最大利润(可能卖出也可能不卖)；
   let dp = [0];
   let minPrice = prices[0];

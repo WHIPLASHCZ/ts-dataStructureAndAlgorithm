@@ -19,7 +19,7 @@ export function heapSort(arr: number[], ascending = true) {
     : (arr: number[], subject: number, object: number) =>
         arr[subject] < arr[object] ? subject : object;
   buildHeap(arr, heapSize, cmp);
-
+  console.log(`heap:`, arr);
   while (heapSize >= 1) {
     swap(arr, 0, heapSize);
     percolateDown(arr, 0, --heapSize, cmp);
@@ -60,5 +60,7 @@ function percolateDown(
   }
 }
 
+let arr = [6, 9, 7, 4, 5, 8];
+heapSort(arr, false);
 // sortTest(heapSort, false, 21);
-measureSort(heapSort, 1000000);
+// measureSort(heapSort, 1000000);
